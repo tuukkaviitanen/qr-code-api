@@ -1,0 +1,17 @@
+FROM rust:1.86-alpine AS builder
+
+WORKDIR /usr/src/app
+
+RUN apk add --no-cache build-base curl bash
+
+RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+
+RUN cargo binstall cargo-watch
+
+COPY Cargo.toml Cargo.lock ./
+
+# Build the dependencies first to cache them
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build
+
+CMD ["cargo", "watch", "-q", "-x", "run"]

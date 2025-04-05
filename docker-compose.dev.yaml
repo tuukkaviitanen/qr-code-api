@@ -1,0 +1,10 @@
+name: qr-code-api-dev
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/usr/src/app/src
