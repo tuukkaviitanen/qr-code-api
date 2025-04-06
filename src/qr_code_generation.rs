@@ -7,15 +7,15 @@ use qrcode::render::svg;
 use crate::errors::Error;
 
 pub enum QrCodeFormat {
-    SVG,
-    PNG,
+    Svg,
+    Png,
 }
 
 impl QrCodeFormat {
     pub fn mime_type(&self) -> &str {
         match self {
-            QrCodeFormat::SVG => "image/svg+xml",
-            QrCodeFormat::PNG => "image/png",
+            QrCodeFormat::Svg => "image/svg+xml",
+            QrCodeFormat::Png => "image/png",
         }
     }
 }
@@ -25,7 +25,7 @@ pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u
     let code = QrCode::new(data).map_err(Error::QrCodeGenerationError)?;
 
     match format {
-        QrCodeFormat::SVG => {
+        QrCodeFormat::Svg => {
             // Render the QR code as SVG
             let svg_data = code
                 .render()
@@ -36,7 +36,7 @@ pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u
             let bytes = svg_data.as_bytes().to_vec();
             Ok(bytes)
         }
-        QrCodeFormat::PNG => {
+        QrCodeFormat::Png => {
             // Render the QR code as PNG
             let png_data = code.render::<Luma<u8>>().build();
 

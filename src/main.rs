@@ -44,12 +44,12 @@ async fn get_qr_code(Path(content): Path<String>, headers: HeaderMap) -> Result<
     let accept_header = headers
         .get("accept")
         .and_then(|value| value.to_str().ok())
-        .unwrap_or(QrCodeFormat::SVG.mime_type());
+        .unwrap_or(QrCodeFormat::Svg.mime_type());
 
     let format = match accept_header {
-        header if header.contains(QrCodeFormat::SVG.mime_type()) => QrCodeFormat::SVG,
-        header if header.contains(QrCodeFormat::PNG.mime_type()) => QrCodeFormat::PNG,
-        _ => QrCodeFormat::SVG,
+        header if header.contains(QrCodeFormat::Svg.mime_type()) => QrCodeFormat::Svg,
+        header if header.contains(QrCodeFormat::Png.mime_type()) => QrCodeFormat::Png,
+        _ => QrCodeFormat::Svg,
     };
 
     let qr_code_bytes = qr_code_generation::generate_qr_code(&content, &format).await?;
