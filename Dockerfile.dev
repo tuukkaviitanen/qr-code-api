@@ -1,17 +1,25 @@
+# Using Alpine as that's used for the production image
 FROM rust:1.86-alpine AS builder
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
+# Install build dependencies for Alpine and curl and bash for binstall
 RUN apk add --no-cache build-base curl bash
 
+# Install binstall for faster cargo installs
 RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
 
+# Install bacon for live reload
 RUN cargo binstall bacon
 
+# Include just the Cargo.toml and Cargo.lock files first to cache dependencies
 COPY Cargo.toml Cargo.lock ./
 
 # Build the dependencies first to cache them
+# Template src/main.rs has to exist for build to run
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 RUN cargo build
 
+# Run app with live reload
+# See all default bacon jobs at https://raw.githubusercontent.com/Canop/bacon/main/defaults/default-bacon.toml
 CMD ["bacon", "--headless", "--watch", "./src/", "run-long"]

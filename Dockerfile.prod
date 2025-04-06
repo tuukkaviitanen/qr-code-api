@@ -1,3 +1,5 @@
+# Using Alpine as it uses musl instead of glibc and musl allows statically linked binaries,
+# thus enabling the use of scratch in the final stage
 FROM rust:1.86-alpine AS builder
 
 WORKDIR /app
@@ -8,12 +10,15 @@ RUN apk add --no-cache build-base
 COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 
+# Build an optimized release binary
 RUN cargo build --release
 
+# Scratch is used to create a minimal image with no dependencies
 FROM scratch AS final
 
 WORKDIR /app
 
+# Copy only the release binary from the builder stage
 COPY --from=builder /app/target/release/qr-code-api ./qr-code-api
 
 CMD ["./qr-code-api"]
