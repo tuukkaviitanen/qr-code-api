@@ -14,6 +14,8 @@ mod qr_code_generation;
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
 
     // build our application with a single route
@@ -23,6 +25,8 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
         .expect(&format!("Failed to bind to port \"{port}\""));
+
+    log::info!("Listening on port {port}");
     axum::serve(listener, app).await.unwrap();
 }
 

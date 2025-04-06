@@ -2,7 +2,6 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use log::error;
 
 pub enum Error {
     QrCodeGenerationError(qrcode::types::QrError),
@@ -21,7 +20,7 @@ impl IntoResponse for Error {
                 )
                     .into_response(),
                 _ => {
-                    error!("Unexpected QR code generation error: {:?}", err);
+                    log::error!("Unexpected QR code generation error: {:?}", err);
 
                     (
                         StatusCode::INTERNAL_SERVER_ERROR,
