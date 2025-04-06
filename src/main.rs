@@ -24,7 +24,7 @@ async fn main() {
     // run our app with hyper, listening globally on port 3000
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
-        .expect(&format!("Failed to bind to port \"{port}\""));
+        .unwrap_or_else(|_| panic!("Failed to bind to port \"{port}\""));
 
     log::info!("Listening on port {port}");
     axum::serve(listener, app).await.unwrap();

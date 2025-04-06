@@ -11,7 +11,7 @@ COPY Cargo.toml Cargo.lock ./
 COPY src ./src
 
 # Build an optimized release binary
-RUN cargo build --release
+RUN cargo build --locked --release
 
 # Scratch is used to create a minimal image with no dependencies
 FROM scratch AS final
