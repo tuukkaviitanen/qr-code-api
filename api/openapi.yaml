@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: QR Code Generation API
+  description: |
+    This API provides a single endpoint to generate QR codes based on the input content provided in the URL path.
+  version: 1.0.0
+paths:
+  /qr/{content}:
+    get:
+      tags:
+        - QR Code
+      summary: Generate QR Code
+      description: Can output PNG or SVG images depending on the `Accept` header. When no `Accept` header is provided, the default is SVG.
+      parameters:
+        - name: content
+          in: path
+          required: true
+          description: The content for the QR code. This can be any string, such as a URI or text.
+          schema:
+            type: string
+            example: "https://tuukka.net"
+      responses:
+        "200":
+          description: QR code generated successfully.
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/svg+xml:
+              schema:
+                type: string
+        "400":
+          description: Invalid request parameters
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error: Content too long"
+        "500":
+          description: Server error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error: Internal server error"

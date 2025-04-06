@@ -21,4 +21,7 @@ WORKDIR /app
 # Copy only the release binary from the builder stage
 COPY --from=builder /app/target/release/qr-code-api ./qr-code-api
 
+COPY ./static ./static
+COPY ./api ./api
+
 CMD ["./qr-code-api"]

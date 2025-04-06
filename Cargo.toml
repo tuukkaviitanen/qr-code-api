@@ -6,6 +6,8 @@ edition = "2024"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 axum = "0.8.3"
+tower-http = { version = "0.6.2", features = ["fs", "cors"] }
 log = "0.4.27"
 env_logger = "0.11.8"
 qrcode = "0.14.1"
+image = "0.25.6"

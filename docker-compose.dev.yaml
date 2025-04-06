@@ -11,3 +11,5 @@ services:
       - RUST_LOG=debug
     volumes:
       - ./src:/app/src
+      - ./api:/app/api
+      - ./static:/app/static
