@@ -1,8 +1,8 @@
 use std::io::Cursor;
 
-use image::{Luma, Rgb};
+use image::Rgb;
+use qrcode::QrCode;
 use qrcode::render::svg;
-use qrcode::{Color, QrCode};
 
 use crate::errors::Error;
 
