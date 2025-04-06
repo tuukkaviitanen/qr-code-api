@@ -8,9 +8,12 @@ on:
     branches:
       - main
 
+env:
+  RUNNER: ubuntu-24.04
+
 jobs:
   verification:
-    runs-on: ubuntu-20.10
+    runs-on: ${{ env.RUNNER }}
     timeout-minutes: 5
 
     steps:
@@ -32,7 +35,7 @@ jobs:
   tag_release:
     needs: ["verification"]
     if: ${{ github.event_name == 'push' }}
-    runs-on: ubuntu-20.10
+    runs-on: ${{ env.RUNNER }}
     permissions:
       contents: write
     outputs:
@@ -48,7 +51,7 @@ jobs:
 
   publish_docker_image:
     needs: [tag_release]
-    runs-on: ubuntu-20.10
+    runs-on: ${{ env.RUNNER }}
     permissions:
       contents: read
       packages: write
