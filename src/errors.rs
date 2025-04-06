@@ -5,6 +5,7 @@ use axum::{
 
 pub enum Error {
     QrCodeGenerationError(qrcode::types::QrError),
+    ImageCreationError(image::ImageError),
 }
 
 impl IntoResponse for Error {
@@ -29,6 +30,14 @@ impl IntoResponse for Error {
                         .into_response()
                 }
             },
+            Error::ImageCreationError(err) => {
+                log::error!("Image creation error: {:?}", err);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Error: Internal server error",
+                )
+                    .into_response()
+            }
         }
     }
 }
