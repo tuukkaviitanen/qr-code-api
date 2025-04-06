@@ -1,6 +1,6 @@
 use std::io::Cursor;
 
-use image::Luma;
+use image::Rgb;
 use qrcode::QrCode;
 use qrcode::render::svg;
 
@@ -38,7 +38,11 @@ pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u
         }
         QrCodeFormat::Png => {
             // Render the QR code as PNG
-            let png_data = code.render::<Luma<u8>>().build();
+            let png_data = code
+                .render()
+                .dark_color(Rgb([20u8, 33u8, 3u8]))
+                .light_color(Rgb([204u8, 235u8, 162u8]))
+                .build();
 
             let mut bytes: Vec<u8> = Vec::new();
 
