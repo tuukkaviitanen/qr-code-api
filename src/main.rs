@@ -24,14 +24,12 @@ async fn main() {
 
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
 
-    // build our application with a single route
     let app = Router::new()
         .route("/qr/{*content}", get(get_qr_code))
         .nest_service("/openapi.yaml", ServeFile::new("./api/openapi.yaml"))
         .fallback_service(ServeFile::new("./static/index.html"))
         .layer(CorsLayer::new().allow_origin(Any));
 
-    // run our app with hyper, listening globally on port 3000
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
         .unwrap_or_else(|_| panic!("Failed to bind to port \"{port}\""));
