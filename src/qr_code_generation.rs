@@ -21,12 +21,10 @@ impl QrCodeFormat {
 }
 
 pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u8>, Error> {
-    // Create a QR code
     let code = QrCode::new(data).map_err(Error::QrCodeGenerationError)?;
 
     match format {
         QrCodeFormat::Svg => {
-            // Render the QR code as SVG
             let svg_data = code
                 .render()
                 .dark_color(svg::Color("#142103"))
@@ -37,7 +35,6 @@ pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u
             Ok(bytes)
         }
         QrCodeFormat::Png => {
-            // Render the QR code as PNG
             let png_data = code
                 .render()
                 .dark_color(Rgb([20u8, 33u8, 3u8]))
