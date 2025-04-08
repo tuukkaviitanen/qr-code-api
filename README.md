@@ -2,8 +2,7 @@
 
 > HTTP API for quickly generating QR codes
 
-The intractable Swagger UI documentation is found here: https://qr.tuukka.net
-
+The interactive Swagger UI documentation is found here: https://qr.tuukka.net
 ## Summary
 
 Create a QR Code with a simple HTTP GET request. Since it's a GET request, it can be easily embedded in HTML or Markdown files just like this one.
