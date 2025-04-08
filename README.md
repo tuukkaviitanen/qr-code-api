@@ -15,7 +15,7 @@ is created like so:
 
 `![QR Code to tuukka.net](https://qr.tuukka.net/svg/https://tuukka.net)`
 
-No additional setup is needed. The image format is specified with the first path parameter, so no headers or body parameters are required to make it fully compatible with HTML/Markdown embedding. The content in the second path parameter could be a URL like in this example, a normal string, or some other URI. [Here](https://www.webfx.com/blog/web-design/qr-codes-uri-schemes/) is a blog post about additional URI schemes QR codes. And here is a QR code to it:
+No additional setup is needed. The image format is specified with the first path parameter, so no headers or body parameters are required, making it fully compatible with HTML/Markdown embedding. The content in the second path parameter could be a URL like in this example, a normal string, or some other URI. [Here](https://www.webfx.com/blog/web-design/qr-codes-uri-schemes/) is a blog post about additional URI schemes QR codes. And here is a QR code to it:
 
 ![Blog post about QR codes and URI schemes](https://qr.tuukka.net/svg/https://www.webfx.com/blog/web-design/qr-codes-uri-schemes/)
 
