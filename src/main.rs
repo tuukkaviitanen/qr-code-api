@@ -1,4 +1,3 @@
-use axum::http::HeaderMap;
 use axum::http::header;
 use qr_code_generation::QrCodeFormat;
 use std::env;
@@ -25,7 +24,7 @@ async fn main() {
     let port = env::var("PORT").unwrap_or_else(|_| "3000".to_string());
 
     let app = Router::new()
-        .route("/qr/{*content}", get(get_qr_code))
+        .route("/{format}/{*content}", get(get_qr_code))
         .nest_service("/openapi.yaml", ServeFile::new("./api/openapi.yaml"))
         .fallback_service(ServeFile::new("./static/index.html"))
         .layer(CorsLayer::new().allow_origin(Any));
@@ -38,23 +37,26 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn get_qr_code(Path(content): Path<String>, headers: HeaderMap) -> Result<Response, Error> {
-    let accept_header = headers
-        .get("accept")
-        .and_then(|value| value.to_str().ok())
-        .unwrap_or(QrCodeFormat::Svg.mime_type());
-
-    let format = match accept_header {
-        header if header.contains(QrCodeFormat::Svg.mime_type()) => QrCodeFormat::Svg,
-        header if header.contains(QrCodeFormat::Png.mime_type()) => QrCodeFormat::Png,
-        _ => QrCodeFormat::Svg,
+async fn get_qr_code(Path((format, content)): Path<(String, String)>) -> Result<Response, Error> {
+    let parsed_format = match format.as_str() {
+        "svg" => {
+            log::info!("Generating SVG QR code");
+            QrCodeFormat::Svg
+        }
+        "png" => {
+            log::info!("Generating PNG QR code");
+            QrCodeFormat::Png
+        }
+        _ => {
+            return Err(Error::InvalidFormat(format));
+        }
     };
 
-    let qr_code_bytes = qr_code_generation::generate_qr_code(&content, &format).await?;
+    let qr_code_bytes = qr_code_generation::generate_qr_code(&content, &parsed_format).await?;
 
     Ok((
         axum::http::StatusCode::OK,
-        [(header::CONTENT_TYPE, format.mime_type())],
+        [(header::CONTENT_TYPE, parsed_format.mime_type())],
         qr_code_bytes,
     )
         .into_response())
