@@ -5,66 +5,45 @@ info:
     This API provides endpoints for generating QR codes based on the input content provided in the URL path.
   version: 2.0.0
 paths:
-  /svg/{content}:
+  /{format}/{content}:
     get:
       tags:
         - QR Code
-      summary: Generate QR Code in SVG format with the specified content
+      summary: Generate QR Code in the specified format with the specified content
       parameters:
-        - $ref: "#/components/parameters/content"
+        - name: format
+          in: path
+          required: true
+          description: The image format for the QR code.
+          schema:
+            enum:
+              - svg
+              - png
+        - name: content
+          in: path
+          required: true
+          description: The content for the QR code. This can be any string, such as a URI or text.
+          schema:
+            type: string
+            example: "https://tuukka.net"
       responses:
         "200":
           description: QR code generated successfully.
           content:
-            image/svg+xml:
+            image/*:
               schema:
                 type: string
         "400":
-          $ref: "#/components/responses/InvalidContent"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-
-  /png/{content}:
-    get:
-      tags:
-        - QR Code
-      summary: Generate QR Code in PNG format with the specified content
-      parameters:
-        - $ref: "#/components/parameters/content"
-      responses:
-        "200":
-          description: QR code generated successfully.
+          description: Invalid content provided
           content:
-            image/png:
+            text/plain:
               schema:
                 type: string
-        "400":
-          $ref: "#/components/responses/InvalidContent"
+                example: "Error: Content too long"
         "500":
-          $ref: "#/components/responses/InternalServerError"
-
-components:
-  parameters:
-    content:
-      name: content
-      in: path
-      required: true
-      description: The content for the QR code. This can be any string, such as a URI or text.
-      schema:
-        type: string
-        example: "https://tuukka.net"
-  responses:
-    InvalidContent:
-      description: Invalid content provided
-      content:
-        text/plain:
-          schema:
-            type: string
-            example: "Error: Content too long"
-    InternalServerError:
-      description: Internal server error occurred
-      content:
-        text/plain:
-          schema:
-            type: string
-            example: "Error: Internal server error"
+          description: Internal server error occurred
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error: Internal server error"
