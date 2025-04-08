@@ -21,7 +21,7 @@ impl QrCodeFormat {
 }
 
 pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u8>, Error> {
-    let code = QrCode::new(data).map_err(Error::QrCodeGenerationError)?;
+    let code = QrCode::new(data).map_err(Error::QrCodeGeneration)?;
 
     match format {
         QrCodeFormat::Svg => {
@@ -45,7 +45,7 @@ pub async fn generate_qr_code(data: &str, format: &QrCodeFormat) -> Result<Vec<u
 
             png_data
                 .write_to(&mut Cursor::new(&mut bytes), image::ImageFormat::Png)
-                .map_err(Error::ImageCreationError)?;
+                .map_err(Error::ImageCreation)?;
 
             Ok(bytes)
         }
