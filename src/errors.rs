@@ -6,6 +6,7 @@ use axum::{
 pub enum Error {
     QrCodeGenerationError(qrcode::types::QrError),
     ImageCreationError(image::ImageError),
+    InvalidFormat(String),
 }
 
 impl IntoResponse for Error {
@@ -35,6 +36,14 @@ impl IntoResponse for Error {
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
                     "Error: Internal server error",
+                )
+                    .into_response()
+            }
+            Error::InvalidFormat(format) => {
+                log::error!("Invalid format: {}", format);
+                (
+                    StatusCode::BAD_REQUEST,
+                    "Error: Invalid format. Supported formats are 'svg' and 'png'",
                 )
                     .into_response()
             }

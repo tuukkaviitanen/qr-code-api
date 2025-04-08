@@ -2,23 +2,35 @@ openapi: 3.0.0
 info:
   title: QR Code Generation API
   description: |
-    This API provides a single endpoint to generate QR codes based on the input content provided in the URL path.
-  version: 1.0.0
+    This API provides endpoints for generating QR codes based on the input content provided in the URL path.
+  version: 2.0.0
 paths:
-  /qr/{content}:
+  /svg/{content}:
     get:
       tags:
         - QR Code
-      summary: Generate QR Code
-      description: Can output PNG or SVG images depending on the `Accept` header. When no `Accept` header is provided, the default is SVG.
+      summary: Generate QR Code in SVG format with the specified content
       parameters:
-        - name: content
-          in: path
-          required: true
-          description: The content for the QR code. This can be any string, such as a URI or text.
-          schema:
-            type: string
-            example: "https://tuukka.net"
+        - $ref: "#/components/parameters/content"
+      responses:
+        "200":
+          description: QR code generated successfully.
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+        "400":
+          $ref: "#/components/responses/InvalidContent"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /png/{content}:
+    get:
+      tags:
+        - QR Code
+      summary: Generate QR Code in PNG format with the specified content
+      parameters:
+        - $ref: "#/components/parameters/content"
       responses:
         "200":
           description: QR code generated successfully.
@@ -26,21 +38,33 @@ paths:
             image/png:
               schema:
                 type: string
-                format: binary
-            image/svg+xml:
-              schema:
-                type: string
         "400":
-          description: Invalid request parameters
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Error: Content too long"
+          $ref: "#/components/responses/InvalidContent"
         "500":
-          description: Server error occurred
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Error: Internal server error"
+          $ref: "#/components/responses/InternalServerError"
+
+components:
+  parameters:
+    content:
+      name: content
+      in: path
+      required: true
+      description: The content for the QR code. This can be any string, such as a URI or text.
+      schema:
+        type: string
+        example: "https://tuukka.net"
+  responses:
+    InvalidContent:
+      description: Invalid content provided
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Error: Content too long"
+    InternalServerError:
+      description: Internal server error occurred
+      content:
+        text/plain:
+          schema:
+            type: string
+            example: "Error: Internal server error"
