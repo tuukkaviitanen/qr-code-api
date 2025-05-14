@@ -5,6 +5,7 @@ let
 in
   pkgs.mkShell {
     packages = with rust-pkgs; [ 
+      rustc
       cargo
       rustfmt
       clippy
